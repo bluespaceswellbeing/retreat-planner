@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retreat Planner — Your Planning Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #F5F0E8;
+    --sand-mid: #EDE6D6;
+    --sand-dark: #D4C9B0;
+    --clay: #B5956A;
+    --clay-dark: #8B6F47;
+    --clay-light: #D4B896;
+    --sage: #7A8C7E;
+    --sage-light: #C5D0C7;
+    --sage-dark: #4A5C4E;
+    --moss: #3D4F3E;
+    --terracotta: #C4664A;
+    --terracotta-light: #E8A899;
+    --cream: #FDFAF4;
+    --ink: #2A2420;
+    --ink-mid: #5C4F45;
+    --ink-light: #9B8F86;
+    --white: #FFFFFF;
+    --success-bg: #EBF2EC;
+    --success-text: #2D5E35;
+    --warning-bg: #FBF3E4;
+    --warning-text: #7A4E1A;
+    --danger-bg: #FBEEEA;
+    --danger-text: #8B3220;
+    --info-bg: #EAF0F5;
+    --info-text: #1E4A6B;
+    --neutral-bg: #F0EDE7;
+    --neutral-text: #5C4F45;
+    --sidebar-w: 220px;
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Layout ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--moss);
+    color: var(--sand);
+    padding: 2rem 0;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 0 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-logo-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--sand);
+    line-height: 1.2;
+  }
+
+  .sidebar-logo-sub {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sage-light);
+    margin-top: 2px;
+  }
+
+  .sidebar-retreat-name {
+    padding: 0 1.5rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 1rem;
+  }
+
+  .sidebar-retreat-name input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    padding: 6px 10px;
+    width: 100%;
+    outline: none;
+  }
+
+  .sidebar-retreat-name input:focus {
+    border-color: var(--clay-light);
+    background: rgba(255,255,255,0.12);
+  }
+
+  .sidebar-retreat-name input::placeholder { color: rgba(245,240,232,0.4); }
+
+  .sidebar-date-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .sidebar-date-row input {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    color: var(--sand);
+    font-size: 11px;
+    padding: 4px 8px;
+    width: 100%;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .sidebar-nav { flex: 1; padding: 0 0.75rem; }
+
+  .nav-section-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sage-light);
+    opacity: 0.6;
+    padding: 0 0.75rem;
+    margin: 1rem 0 0.4rem;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: rgba(245,240,232,0.7);
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: var(--sand); }
+
+  .nav-item.active {
+    background: rgba(212,184,150,0.2);
+    color: var(--clay-light);
+    font-weight: 500;
+  }
+
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .nav-badge {
+    margin-left: auto;
+    font-size: 10px;
+    background: var(--clay);
+    color: var(--cream);
+    padding: 1px 7px;
+    border-radius: 20px;
+  }
+
+  .sidebar-progress {
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: auto;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--sage-light);
+    margin-bottom: 6px;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage), var(--clay-light));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Main content ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 2.5rem;
+    min-height: 100vh;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Page header ── */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.1;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: var(--ink-light);
+    margin-top: 4px;
+  }
+
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* ── Buttons ── */
+  .btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    background: var(--moss);
+    color: var(--cream);
+  }
+
+  .btn-primary:hover { background: var(--sage-dark); }
+
+  .btn-secondary {
+    background: var(--white);
+    color: var(--ink-mid);
+    border: 1px solid var(--sand-dark);
+  }
+
+  .btn-secondary:hover { background: var(--sand); }
+
+  .btn-sheets {
+    background: var(--success-bg);
+    color: var(--success-text);
+    font-size: 11px;
+    padding: 5px 10px;
+    text-decoration: none;
+  }
+
+  .btn-sheets:hover { opacity: 0.85; }
+
+  /* ── Stat cards ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--sand-dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--sand-dark);
+  }
+
+  .stat-card.accent-sage::before { background: var(--sage); }
+  .stat-card.accent-clay::before { background: var(--clay); }
+  .stat-card.accent-terracotta::before { background: var(--terracotta); }
+  .stat-card.accent-moss::before { background: var(--moss); }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--ink-light);
+  }
+
+  /* ── Section cards ── */
+  .section-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--sand-dark);
+    overflow: hidden;
+  }
+
+  .card-full { grid-column: 1 / -1; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--sand-mid);
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title-icon {
+    width: 14px;
+    height: 14px;
+    color: var(--clay);
+  }
+
+  .card-body { padding: 0; }
+
+  /* ── Table rows ── */
+  .table-row {
+    display: grid;
+    padding: 10px 1.25rem;
+    border-bottom: 1px solid var(--sand-mid);
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    transition: background 0.1s;
+  }
+
+  .table-row:last-child { border-bottom: none; }
+  .table-row:hover { background: var(--sand); }
+
+  .table-row.header {
+    background: var(--sand);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    padding: 8px 1.25rem;
+  }
+
+  .table-row.header:hover { background: var(--sand); }
+
+  /* ── Badges ── */
+  .badge {
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .badge-green { background: var(--success-bg); color: var(--success-text); }
+  .badge-amber { background: var(--warning-bg); color: var(--warning-text); }
+  .badge-red { background: var(--danger-bg); color: var(--danger-text); }
+  .badge-blue { background: var(--info-bg); color: var(--info-text); }
+  .badge-gray { background: var(--neutral-bg); color: var(--neutral-text); }
+  .badge-clay {background: #F5EDE3; color: var(--clay-dark); }
+
+  /* ── Progress bars ── */
+  .prog-row {
+    display: grid;
+    grid-template-columns: 140px 80px 1fr 36px;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 1.25rem;
+    border-bottom: 1px solid var(--sand-mid);
+    font-size: 12px;
+  }
+
+  .prog-row:last-child { border-bottom: none; }
+
+  .prog-track {
+    height: 5px;
+    background: var(--sand-mid);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .prog-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+
+  .prog-pct { font-size: 11px; color: var(--ink-light); text-align: right; }
+
+  /* ── Checklist ── */
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 1.25rem;
+    border-bottom: 1px solid var(--sand-mid);
+    cursor: pointer;
+    transition: background 0.1s;
+    font-size: 13px;
+  }
+
+  .check-row:last-child { border-bottom: none; }
+  .check-row:hover { background: var(--sand); }
+
+  .check-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--sand-dark);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .check-box.checked {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .check-label { flex: 1; }
+  .check-label.done { text-decoration: line-through; color: var(--ink-light); }
+  .check-date { font-size: 11px; color: var(--ink-light); }
+
+  /* ── Attendee initials ── */
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--sand-mid);
+    color: var(--ink-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  /* ── Finance row ── */
+  .fin-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 9px 1.25rem;
+    border-bottom: 1px solid var(--sand-mid);
+    font-size: 13px;
+    gap: 12px;
+  }
+
+  .fin-row:last-child { border-bottom: none; }
+  .fin-row.total {
+    background: var(--sand);
+    font-weight: 500;
+    border-bottom: none;
+    margin-top: 2px;
+  }
+
+  .fin-amount { font-variant-numeric: tabular-nums; }
+  .fin-income { color: var(--sage-dark); }
+  .fin-expense { color: var(--terracotta); }
+  .fin-profit { color: var(--moss); font-size: 15px; }
+  .fin-sub { font-size: 11px; color: var(--ink-light); margin-top: 1px; }
+
+  /* ── Itinerary ── */
+  .itinerary-day {
+    border-bottom: 1px solid var(--sand-mid);
+    padding: 1rem 1.25rem;
+  }
+
+  .itinerary-day:last-child { border-bottom: none; }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .day-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .day-sessions { display: flex; flex-direction: column; gap: 4px; }
+
+  .session-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--ink-mid);
+  }
+
+  .session-time {
+    font-size: 10px;
+    color: var(--ink-light);
+    width: 50px;
+    flex-shrink: 0;
+  }
+
+  .session-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Marketing ── */
+  .mkt-row {
+    display: grid;
+    grid-template-columns: 1fr 90px 80px;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 1.25rem;
+    border-bottom: 1px solid var(--sand-mid);
+    font-size: 13px;
+  }
+
+  .mkt-row:last-child { border-bottom: none; }
+
+  /* ── Venue card ── */
+  .venue-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 1.25rem;
+    border-bottom: 1px solid var(--sand-mid);
+    font-size: 13px;
+  }
+
+  .venue-detail-row:last-child { border-bottom: none; }
+  .venue-key { color: var(--ink-light); font-size: 12px; }
+
+  /* ── Dashboard overview ── */
+  .overview-hero {
+    background: var(--moss);
+    border-radius: var(--radius);
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .overview-hero::after {
+    content: '';
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .hero-text {}
+
+  .hero-greeting {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 6px;
+  }
+
+  .hero-retreat-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 4px;
+    color: var(--sand);
+  }
+
+  .hero-meta { font-size: 12px; opacity: 0.65; }
+
+  .hero-countdown {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .countdown-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--clay-light);
+  }
+
+  .countdown-label { font-size: 11px; opacity: 0.6; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ── Add row form ── */
+  .add-row {
+    padding: 8px 1.25rem;
+    border-top: 1px solid var(--sand-mid);
+    background: var(--sand);
+  }
+
+  .add-row input {
+    background: var(--white);
+    border: 1px solid var(--sand-dark);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    outline: none;
+    width: 200px;
+  }
+
+  .add-row input:focus { border-color: var(--clay); }
+
+  /* ── Animations ── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page.active { animation: fadeIn 0.25s ease; }
+
+  /* ── Responsive tweaks ── */
+  @media (max-width: 900px) {
+    :root { --sidebar-w: 64px; }
+    .sidebar-logo-title, .sidebar-logo-sub, .sidebar-retreat-name, .nav-section-label, .nav-item span, .nav-badge, .sidebar-progress { display: none; }
+    .nav-item { justify-content: center; padding: 12px; }
+    .nav-icon { opacity: 0.8; }
+    .main { padding: 1.5rem; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-title">Retreat Planner</div>
+      <div class="sidebar-logo-sub">Planning hub</div>
+    </div>
+
+    <div class="sidebar-retreat-name">
+      <input type="text" id="retreat-name-input" value="Andalusia Yoga Retreat" placeholder="Retreat name…">
+      <div class="sidebar-date-row">
+        <input type="date" id="retreat-start" value="2025-09-12">
+        <input type="date" id="retreat-end" value="2025-09-17">
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <button class="nav-item active" onclick="showPage('dashboard')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1" stroke-width="1.5"/></svg>
+        <span>Dashboard</span>
+      </button>
+
+      <div class="nav-section-label">Planning</div>
+      <button class="nav-item" onclick="showPage('venue')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-width="1.5"/><polyline points="9 22 9 12 15 12 15 22" stroke-width="1.5"/></svg>
+        <span>Venue</span>
+      </button>
+      <button class="nav-item" onclick="showPage('itinerary')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke-width="1.5"/></svg>
+        <span>Itinerary</span>
+      </button>
+      <button class="nav-item" onclick="showPage('tasks')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4" stroke-width="1.5"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-width="1.5"/></svg>
+        <span>Tasks</span>
+        <span class="nav-badge" id="tasks-badge">3</span>
+      </button>
+
+      <div class="nav-section-label">People & Money</div>
+      <button class="nav-item" onclick="showPage('attendees')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-width="1.5"/><circle cx="9" cy="7" r="4" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87" stroke-width="1.5"/><path d="M16 3.13a4 4 0 010 7.75" stroke-width="1.5"/></svg>
+        <span>Attendees</span>
+      </button>
+      <button class="nav-item" onclick="showPage('finances')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23" stroke-width="1.5"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke-width="1.5"/></svg>
+        <span>Finances</span>
+      </button>
+
+      <div class="nav-section-label">Growth</div>
+      <button class="nav-item" onclick="showPage('marketing')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-width="1.5"/></svg>
+        <span>Marketing</span>
+      </button>
+      <button class="nav-item" onclick="showPage('post')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-width="1.5"/></svg>
+        <span>Post-retreat</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-progress">
+      <div class="progress-label">
+        <span>Overall progress</span>
+        <span id="prog-pct-label">62%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="overall-progress-fill" style="width:62%"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <!-- Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <div class="overview-hero">
+        <div class="hero-text">
+          <div class="hero-greeting">Your planning hub</div>
+          <div class="hero-retreat-name" id="hero-retreat-name">Andalusia Yoga Retreat</div>
+          <div class="hero-meta" id="hero-meta">12–17 September 2025 &nbsp;·&nbsp; Finca Luz, Andalusia</div>
+        </div>
+        <div class="hero-countdown">
+          <div class="countdown-num" id="countdown-num">47</div>
+          <div class="countdown-label">days to go</div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card accent-sage">
+          <div class="stat-label">Attendees booked</div>
+          <div class="stat-value">14<span style="font-size:18px;color:var(--ink-light)">/20</span></div>
+          <div class="stat-sub">6 spots remaining</div>
+        </div>
+        <div class="stat-card accent-clay">
+          <div class="stat-label">Revenue collected</div>
+          <div class="stat-value">£7,000</div>
+          <div class="stat-sub">of £10,000 target</div>
+        </div>
+        <div class="stat-card accent-terracotta">
+          <div class="stat-label">Total expenses</div>
+          <div class="stat-value">£3,200</div>
+          <div class="stat-sub">£6,800 budget left</div>
+        </div>
+        <div class="stat-card accent-moss">
+          <div class="stat-label">Projected profit</div>
+          <div class="stat-value">£3,800</div>
+          <div class="stat-sub">at full capacity</div>
+        </div>
+      </div>
+
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Planning phases</span>
+          </div>
+          <div class="card-body">
+            <div class="prog-row" style="background:var(--sand);font-size:10px;color:var(--ink-light);letter-spacing:0.08em;text-transform:uppercase;">
+              <div>Phase</div><div>Period</div><div>Progress</div><div></div>
+            </div>
+            <div class="prog-row">
+              <div style="font-weight:500">Venue & logistics</div>
+              <div style="font-size:11px;color:var(--ink-light)">Jan – Mar</div>
+              <div class="prog-track"><div class="prog-fill" style="width:90%;background:var(--sage)"></div></div>
+              <div class="prog-pct">90%</div>
+            </div>
+            <div class="prog-row">
+              <div style="font-weight:500">Marketing & sales</div>
+              <div style="font-size:11px;color:var(--ink-light)">Feb – Jul</div>
+              <div class="prog-track"><div class="prog-fill" style="width:60%;background:var(--clay)"></div></div>
+              <div class="prog-pct">60%</div>
+            </div>
+            <div class="prog-row">
+              <div style="font-weight:500">Attendee comms</div>
+              <div style="font-size:11px;color:var(--ink-light)">Mar – Aug</div>
+              <div class="prog-track"><div class="prog-fill" style="width:45%;background:var(--clay-dark)"></div></div>
+              <div class="prog-pct">45%</div>
+            </div>
+            <div class="prog-row">
+              <div style="font-weight:500">On-retreat prep</div>
+              <div style="font-size:11px;color:var(--ink-light)">Aug – Sep</div>
+              <div class="prog-track"><div class="prog-fill" style="width:15%;background:var(--terracotta)"></div></div>
+              <div class="prog-pct">15%</div>
+            </div>
+            <div class="prog-row">
+              <div style="font-weight:500">Post-retreat</div>
+              <div style="font-size:11px;color:var(--ink-light)">Sep+</div>
+              <div class="prog-track"><div class="prog-fill" style="width:0%;background:var(--ink-light)"></div></div>
+              <div class="prog-pct">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Urgent tasks</span>
+            <button class="btn btn-secondary" onclick="showPage('tasks')" style="font-size:11px;padding:4px 10px">View all</button>
+          </div>
+          <div class="card-body">
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Confirm catering dietary requirements</span>
+              <span class="check-date">30 Jun</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Draft airport transfer plan</span>
+              <span class="check-date">15 Jul</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Send balance reminder emails</span>
+              <span class="check-date">20 Jun</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Send venue final headcount</span>
+              <span class="check-date"></span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Publish week 3 Instagram reel</span>
+              <span class="check-date"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Attendee snapshot</span>
+            <a class="btn btn-sheets" href="YOUR_SHEETS_URL" target="_blank">Open in Sheets ↗</a>
+          </div>
+          <div class="card-body">
+            <div class="table-row header" style="grid-template-columns:30px 1fr 90px 80px">
+              <div></div><div>Name</div><div>Status</div><div>Paid</div>
+            </div>
+            <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px">
+              <div class="avatar">SM</div><div>Sarah M.</div><span class="badge badge-green">Confirmed</span><div>£595</div>
+            </div>
+            <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px">
+              <div class="avatar">PK</div><div>Priya K.</div><span class="badge badge-green">Confirmed</span><div>£595</div>
+            </div>
+            <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px">
+              <div class="avatar">JH</div><div>Jo H.</div><span class="badge badge-amber">Deposit</span><div>£150</div>
+            </div>
+            <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px">
+              <div class="avatar">RT</div><div>Rachel T.</div><span class="badge badge-amber">Deposit</span><div>£150</div>
+            </div>
+            <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px">
+              <div class="avatar">CB</div><div>Claire B.</div><span class="badge badge-blue">Enquiry</span><div>—</div>
+            </div>
+            <div style="padding:8px 1.25rem;font-size:11px;color:var(--ink-light)">+ 9 more attendees in full tracker</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Finance snapshot</span>
+            <a class="btn btn-sheets" href="YOUR_SHEETS_URL" target="_blank">Open in Sheets ↗</a>
+          </div>
+          <div class="card-body">
+            <div class="fin-row">
+              <div><div>Attendee payments</div><div class="fin-sub">14 × partial/full</div></div>
+              <div class="fin-amount fin-income">+£7,000</div>
+            </div>
+            <div class="fin-row">
+              <div><div>Venue deposit</div></div>
+              <div class="fin-amount fin-expense">−£1,500</div>
+            </div>
+            <div class="fin-row">
+              <div><div>Photography</div></div>
+              <div class="fin-amount fin-expense">−£650</div>
+            </div>
+            <div class="fin-row">
+              <div><div>Yoga props & kit</div></div>
+              <div class="fin-amount fin-expense">−£420</div>
+            </div>
+            <div class="fin-row">
+              <div><div>Marketing (ads)</div></div>
+              <div class="fin-amount fin-expense">−£380</div>
+            </div>
+            <div class="fin-row">
+              <div><div>Other supplies</div></div>
+              <div class="fin-amount fin-expense">−£250</div>
+            </div>
+            <div class="fin-row total">
+              <div>Net profit so far</div>
+              <div class="fin-amount fin-profit">+£3,800</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Venue -->
+    <div class="page" id="page-venue">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Venue</div>
+          <div class="page-subtitle">Location, contracts, logistics</div>
+        </div>
+        <div class="header-actions">
+          <a class="btn btn-sheets" href="YOUR_SHEETS_URL" target="_blank">Venue comparison sheet ↗</a>
+        </div>
+      </div>
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Confirmed venue</span><span class="badge badge-green">Confirmed</span></div>
+          <div class="card-body">
+            <div class="venue-detail-row"><span class="venue-key">Name</span><span>Finca Luz</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Location</span><span>Ronda, Andalusia, Spain</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Capacity</span><span>20 guests</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Yoga shala</span><span>Yes — outdoor & indoor</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Catering</span><span>In-house (vegetarian)</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Pool</span><span>Yes</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Total cost</span><span>£6,000</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Contact</span><span>Maria Santos</span></div>
+            <div class="venue-detail-row"><span class="venue-key">Email</span><span style="color:var(--sage-dark)">maria@fincaluz.es</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Venue checklist</span></div>
+          <div class="card-body">
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Site visited & approved</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Contract signed</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Deposit paid (£1,500)</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Catering menu confirmed</span>
+              <span class="check-date">30 Jun</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Final balance paid (£4,500)</span>
+              <span class="check-date">30 Jul</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Airport transfer logistics confirmed</span>
+              <span class="check-date">15 Aug</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Room assignments sent to venue</span>
+              <span class="check-date">25 Aug</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendees -->
+    <div class="page" id="page-attendees">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Attendees</div>
+          <div class="page-subtitle">14 confirmed · 6 spots remaining</div>
+        </div>
+        <div class="header-actions">
+          <a class="btn btn-sheets" href="YOUR_SHEETS_URL" target="_blank">Full tracker in Sheets ↗</a>
+          <button class="btn btn-primary">+ Add attendee</button>
+        </div>
+      </div>
+      <div class="card card-full">
+        <div class="card-header"><span class="card-title">All attendees</span></div>
+        <div class="card-body">
+          <div class="table-row header" style="grid-template-columns:30px 1fr 90px 80px 100px 80px">
+            <div></div><div>Name</div><div>Status</div><div>Paid</div><div>Dietary</div><div>Room</div>
+          </div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">SM</div><div>Sarah Mitchell</div><span class="badge badge-green">Full pay</span><div>£595</div><div>Vegan</div><div>Room 3</div></div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">PK</div><div>Priya Kapoor</div><span class="badge badge-green">Full pay</span><div>£595</div><div>Vegetarian</div><div>Room 4</div></div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">JH</div><div>Jo Hartley</div><span class="badge badge-amber">Deposit</span><div>£150</div><div>No nuts</div><div>Room 1</div></div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">AM</div><div>Anna Moore</div><span class="badge badge-amber">Deposit</span><div>£150</div><div>None</div><div>Room 1</div></div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">RT</div><div>Rachel Tanner</div><span class="badge badge-amber">Deposit</span><div>£150</div><div>Gluten free</div><div>Room 5</div></div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">LS</div><div>Laura Singh</div><span class="badge badge-green">Full pay</span><div>£595</div><div>Vegetarian</div><div>Room 2</div></div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">NW</div><div>Niamh Walsh</div><span class="badge badge-green">Full pay</span><div>£595</div><div>None</div><div>Room 6</div></div>
+          <div class="table-row" style="grid-template-columns:30px 1fr 90px 80px 100px 80px"><div class="avatar">CB</div><div>Claire B.</div><span class="badge badge-blue">Enquiry</span><div>—</div><div>—</div><div>—</div></div>
+          <div style="padding:10px 1.25rem;font-size:12px;color:var(--ink-light)">+ 6 more attendees. Open Google Sheets for full list.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finances -->
+    <div class="page" id="page-finances">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Finances</div>
+          <div class="page-subtitle">Income, expenses, profit tracker</div>
+        </div>
+        <div class="header-actions">
+          <a class="btn btn-sheets" href="YOUR_SHEETS_URL" target="_blank">Finance tracker in Sheets ↗</a>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card accent-sage"><div class="stat-label">Revenue in</div><div class="stat-value">£7,000</div><div class="stat-sub">from 14 attendees</div></div>
+        <div class="stat-card accent-clay"><div class="stat-label">Target revenue</div><div class="stat-value">£10,000</div><div class="stat-sub">at 20 attendees × £500</div></div>
+        <div class="stat-card accent-terracotta"><div class="stat-label">Total expenses</div><div class="stat-value">£3,200</div><div class="stat-sub">logged so far</div></div>
+        <div class="stat-card accent-moss"><div class="stat-label">Projected profit</div><div class="stat-value">£3,800</div><div class="stat-sub">at full capacity</div></div>
+      </div>
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Income</span></div>
+          <div class="card-body">
+            <div class="table-row header" style="grid-template-columns:1fr 80px 80px"><div>Description</div><div>Date</div><div style="text-align:right">Amount</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Sarah M. — full payment</div><div style="font-size:11px;color:var(--ink-light)">12 Mar</div><div style="text-align:right;color:var(--sage-dark)">+£595</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Priya K. — full payment</div><div style="font-size:11px;color:var(--ink-light)">15 Mar</div><div style="text-align:right;color:var(--sage-dark)">+£595</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Jo H. — deposit</div><div style="font-size:11px;color:var(--ink-light)">20 Mar</div><div style="text-align:right;color:var(--sage-dark)">+£150</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Anna M. — deposit</div><div style="font-size:11px;color:var(--ink-light)">22 Mar</div><div style="text-align:right;color:var(--sage-dark)">+£150</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Laura S. — full payment</div><div style="font-size:11px;color:var(--ink-light)">01 Apr</div><div style="text-align:right;color:var(--sage-dark)">+£595</div></div>
+            <div style="padding:8px 1.25rem 8px;display:flex;justify-content:space-between;background:var(--sand);font-weight:500;font-size:13px"><span>Total income</span><span style="color:var(--sage-dark)">+£7,000</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Expenses</span></div>
+          <div class="card-body">
+            <div class="table-row header" style="grid-template-columns:1fr 80px 80px"><div>Description</div><div>Date</div><div style="text-align:right">Amount</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Venue deposit</div><div style="font-size:11px;color:var(--ink-light)">10 Jan</div><div style="text-align:right;color:var(--terracotta)">−£1,500</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Photography booking</div><div style="font-size:11px;color:var(--ink-light)">14 Feb</div><div style="text-align:right;color:var(--terracotta)">−£650</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Yoga props & kit</div><div style="font-size:11px;color:var(--ink-light)">01 Mar</div><div style="text-align:right;color:var(--terracotta)">−£420</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Instagram / Facebook ads</div><div style="font-size:11px;color:var(--ink-light)">Ongoing</div><div style="text-align:right;color:var(--terracotta)">−£380</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 80px 80px"><div>Welcome packs & printing</div><div style="font-size:11px;color:var(--ink-light)">15 Apr</div><div style="text-align:right;color:var(--terracotta)">−£250</div></div>
+            <div style="padding:8px 1.25rem;display:flex;justify-content:space-between;background:var(--sand);font-weight:500;font-size:13px"><span>Total expenses</span><span style="color:var(--terracotta)">−£3,200</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketing -->
+    <div class="page" id="page-marketing">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Marketing</div>
+          <div class="page-subtitle">Campaigns, content, sales pipeline</div>
+        </div>
+        <div class="header-actions">
+          <a class="btn btn-sheets" href="YOUR_SHEETS_URL" target="_blank">Marketing planner in Sheets ↗</a>
+        </div>
+      </div>
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Campaign status</span></div>
+          <div class="card-body">
+            <div class="mkt-row" style="background:var(--sand);font-size:10px;color:var(--ink-light);letter-spacing:0.08em;text-transform:uppercase;padding:7px 1.25rem">
+              <div>Campaign</div><div>Channel</div><div>Status</div>
+            </div>
+            <div class="mkt-row"><div>Sales page</div><div style="font-size:11px;color:var(--ink-light)">Website</div><span class="badge badge-green">Live</span></div>
+            <div class="mkt-row"><div>Welcome email sequence</div><div style="font-size:11px;color:var(--ink-light)">Email</div><span class="badge badge-green">Active</span></div>
+            <div class="mkt-row"><div>Instagram reel series</div><div style="font-size:11px;color:var(--ink-light)">Instagram</div><span class="badge badge-amber">In progress</span></div>
+            <div class="mkt-row"><div>Facebook retargeting</div><div style="font-size:11px;color:var(--ink-light)">Facebook</div><span class="badge badge-amber">Draft</span></div>
+            <div class="mkt-row"><div>Early bird offer</div><div style="font-size:11px;color:var(--ink-light)">All channels</div><span class="badge badge-red">Ends 30 Jun</span></div>
+            <div class="mkt-row"><div>Affiliate / collab outreach</div><div style="font-size:11px;color:var(--ink-light)">Email</div><span class="badge badge-red">Not started</span></div>
+            <div class="mkt-row"><div>Podcast guesting</div><div style="font-size:11px;color:var(--ink-light)">Podcast</div><span class="badge badge-gray">Planned</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Content calendar</span></div>
+          <div class="card-body">
+            <div class="table-row header" style="grid-template-columns:70px 1fr 70px"><div>Date</div><div>Content</div><div>Platform</div></div>
+            <div class="table-row" style="grid-template-columns:70px 1fr 70px"><div style="font-size:11px">15 Jun</div><div>Morning flow reel</div><span class="badge badge-green">Done</span></div>
+            <div class="table-row" style="grid-template-columns:70px 1fr 70px"><div style="font-size:11px">18 Jun</div><div>Venue walkthrough video</div><span class="badge badge-green">Done</span></div>
+            <div class="table-row" style="grid-template-columns:70px 1fr 70px"><div style="font-size:11px">22 Jun</div><div>Testimonial graphic</div><span class="badge badge-amber">Scheduled</span></div>
+            <div class="table-row" style="grid-template-columns:70px 1fr 70px"><div style="font-size:11px">25 Jun</div><div>Early bird reminder</div><span class="badge badge-amber">Draft</span></div>
+            <div class="table-row" style="grid-template-columns:70px 1fr 70px"><div style="font-size:11px">01 Jul</div><div>Final spots post</div><span class="badge badge-red">To create</span></div>
+            <div class="table-row" style="grid-template-columns:70px 1fr 70px"><div style="font-size:11px">05 Jul</div><div>Behind the scenes story</div><span class="badge badge-red">To create</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="page" id="page-tasks">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Tasks</div>
+          <div class="page-subtitle" id="task-subtitle">3 of 12 complete</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="addTask()">+ Add task</button>
+        </div>
+      </div>
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">This week</span></div>
+          <div class="card-body" id="tasks-this-week">
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Confirm catering dietary requirements</span>
+              <span class="check-date badge badge-red">30 Jun</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Send balance reminder emails to deposits</span>
+              <span class="check-date badge badge-amber">20 Jun</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Follow up Claire B. enquiry</span>
+              <span class="check-date badge badge-amber">22 Jun</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Send venue final headcount</span>
+              <span class="check-date"></span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Publish week 3 Instagram reel</span>
+              <span class="check-date"></span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Upcoming</span></div>
+          <div class="card-body">
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Draft airport transfer logistics plan</span>
+              <span class="check-date badge badge-gray">15 Jul</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Pay venue final balance (£4,500)</span>
+              <span class="check-date badge badge-gray">30 Jul</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Send pre-retreat info pack to all attendees</span>
+              <span class="check-date badge badge-gray">10 Aug</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Send room assignments to venue</span>
+              <span class="check-date badge badge-gray">25 Aug</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Print itineraries & welcome packs</span>
+              <span class="check-date badge badge-gray">01 Sep</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box checked"><svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg></div>
+              <span class="check-label done">Book retreat photographer</span>
+              <span class="check-date"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Itinerary -->
+    <div class="page" id="page-itinerary">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Itinerary</div>
+          <div class="page-subtitle">Day-by-day schedule · 12–17 September 2025</div>
+        </div>
+        <div class="header-actions">
+          <a class="btn btn-sheets" href="YOUR_SHEETS_URL" target="_blank">Full schedule in Sheets ↗</a>
+        </div>
+      </div>
+      <div class="card card-full">
+        <div class="card-body">
+          <div class="itinerary-day">
+            <div class="day-header">
+              <div class="day-label">Day 1 — Arrival & Welcome</div>
+              <span class="badge badge-green">Planned</span>
+            </div>
+            <div class="day-sessions">
+              <div class="session-row"><span class="session-time">15:00</span><span class="session-dot" style="background:var(--sage)"></span>Arrivals & room settling</div>
+              <div class="session-row"><span class="session-time">17:00</span><span class="session-dot" style="background:var(--clay)"></span>Welcome circle & opening ceremony</div>
+              <div class="session-row"><span class="session-time">18:30</span><span class="session-dot" style="background:var(--sand-dark)"></span>Welcome dinner together</div>
+              <div class="session-row"><span class="session-time">20:30</span><span class="session-dot" style="background:var(--sage-light)"></span>Free time / early night</div>
+            </div>
+          </div>
+          <div class="itinerary-day">
+            <div class="day-header">
+              <div class="day-label">Day 2 — Morning Flow & Workshop</div>
+              <span class="badge badge-green">Planned</span>
+            </div>
+            <div class="day-sessions">
+              <div class="session-row"><span class="session-time">07:00</span><span class="session-dot" style="background:var(--clay)"></span>Sunrise meditation (30 min)</div>
+              <div class="session-row"><span class="session-time">07:30</span><span class="session-dot" style="background:var(--sage)"></span>Morning yoga flow (90 min)</div>
+              <div class="session-row"><span class="session-time">09:30</span><span class="session-dot" style="background:var(--sand-dark)"></span>Breakfast</div>
+              <div class="session-row"><span class="session-time">11:00</span><span class="session-dot" style="background:var(--clay-dark)"></span>Alignment workshop</div>
+              <div class="session-row"><span class="session-time">13:00</span><span class="session-dot" style="background:var(--sand-dark)"></span>Lunch & rest</div>
+              <div class="session-row"><span class="session-time">17:00</span><span class="session-dot" style="background:var(--sage)"></span>Restorative yoga</div>
+              <div class="session-row"><span class="session-time">19:00</span><span class="session-dot" style="background:var(--sand-dark)"></span>Dinner & sharing circle</div>
+            </div>
+          </div>
+          <div class="itinerary-day">
+            <div class="day-header">
+              <div class="day-label">Day 3 — Yin & Breathwork</div>
+              <span class="badge badge-amber">Draft</span>
+            </div>
+            <div class="day-sessions">
+              <div class="session-row"><span class="session-time">07:30</span><span class="session-dot" style="background:var(--sage)"></span>Morning pranayama (45 min)</div>
+              <div class="session-row"><span class="session-time">08:15</span><span class="session-dot" style="background:var(--sage)"></span>Vinyasa flow (60 min)</div>
+              <div class="session-row"><span class="session-time">11:00</span><span class="session-dot" style="background:var(--clay-dark)"></span>Breathwork journey (2hrs)</div>
+              <div class="session-row"><span class="session-time">17:00</span><span class="session-dot" style="background:var(--sage)"></span>Yin yoga & nidra</div>
+            </div>
+          </div>
+          <div class="itinerary-day">
+            <div class="day-header">
+              <div class="day-label">Day 4 — Free Day & Excursion</div>
+              <span class="badge badge-amber">Draft</span>
+            </div>
+            <div class="day-sessions">
+              <div class="session-row"><span class="session-time">Morning</span><span class="session-dot" style="background:var(--sand-dark)"></span>Optional gentle movement</div>
+              <div class="session-row"><span class="session-time">10:00</span><span class="session-dot" style="background:var(--clay)"></span>Excursion to Ronda old town</div>
+              <div class="session-row"><span class="session-time">18:00</span><span class="session-dot" style="background:var(--sage)"></span>Sunset rooftop yoga</div>
+            </div>
+          </div>
+          <div class="itinerary-day">
+            <div class="day-header">
+              <div class="day-label">Day 5 — Closing Ceremony</div>
+              <span class="badge badge-red">To plan</span>
+            </div>
+            <div class="day-sessions">
+              <div class="session-row"><span class="session-time">07:30</span><span class="session-dot" style="background:var(--sage)"></span>Final morning practice</div>
+              <div class="session-row"><span class="session-time">10:00</span><span class="session-dot" style="background:var(--clay-dark)"></span>Integration circle</div>
+              <div class="session-row"><span class="session-time">12:00</span><span class="session-dot" style="background:var(--sand-dark)"></span>Farewell lunch</div>
+              <div class="session-row"><span class="session-time">14:00</span><span class="session-dot" style="background:var(--ink-light)"></span>Departures</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post-retreat -->
+    <div class="page" id="page-post">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Post-retreat</div>
+          <div class="page-subtitle">Feedback, testimonials & next retreat seeds</div>
+        </div>
+      </div>
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Post-retreat checklist</span></div>
+          <div class="card-body">
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Send thank-you email to all attendees</span>
+              <span class="check-date">Day after</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Send feedback survey (Google Form)</span>
+              <span class="check-date">Day 2</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Share photos with attendees</span>
+              <span class="check-date">Week 1</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Request testimonials from attendees</span>
+              <span class="check-date">Week 2</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Reconcile final finances</span>
+              <span class="check-date">Week 1</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Debrief notes & lessons learned doc</span>
+              <span class="check-date">Week 2</span>
+            </div>
+            <div class="check-row" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <span class="check-label">Announce next retreat to waitlist</span>
+              <span class="check-date">Week 3</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Waitlist for next retreat</span><button class="btn btn-primary" style="font-size:11px;padding:5px 10px">+ Add</button></div>
+          <div class="card-body">
+            <div class="table-row header" style="grid-template-columns:1fr 100px"><div>Name / Email</div><div>Interest</div></div>
+            <div class="table-row" style="grid-template-columns:1fr 100px"><div>Emma L.</div><span class="badge badge-green">Confirmed</span></div>
+            <div class="table-row" style="grid-template-columns:1fr 100px"><div>Zoe T.</div><span class="badge badge-amber">Maybe</span></div>
+            <div class="table-row" style="grid-template-columns:1fr 100px"><div>Bea N.</div><span class="badge badge-green">Confirmed</span></div>
+            <div style="padding:10px 1.25rem;font-size:12px;color:var(--ink-light)">Add interested people here while retreat is live</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  function toggleCheck(row) {
+    const box = row.querySelector('.check-box');
+    const label = row.querySelector('.check-label');
+    const isDone = box.classList.toggle('checked');
+    if (isDone) {
+      box.innerHTML = '<svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,5 4,7 8,3"/></svg>';
+      label.classList.add('done');
+    } else {
+      box.innerHTML = '';
+      label.classList.remove('done');
+    }
+  }
+
+  function addTask() {
+    const taskText = prompt('New task:');
+    if (!taskText) return;
+    const container = document.getElementById('tasks-this-week');
+    const row = document.createElement('div');
+    row.className = 'check-row';
+    row.onclick = function() { toggleCheck(this); };
+    row.innerHTML = '<div class="check-box"></div><span class="check-label">' + taskText + '</span>';
+    container.appendChild(row);
+  }
+
+  document.getElementById('retreat-name-input').addEventListener('input', function() {
+    document.getElementById('hero-retreat-name').textContent = this.value || 'Your retreat';
+  });
+
+  function updateCountdown() {
+    const start = document.getElementById('retreat-start').value;
+    if (!start) return;
+    const days = Math.ceil((new Date(start) - new Date()) / 86400000);
+    const el = document.getElementById('countdown-num');
+    if (el) el.textContent = days > 0 ? days : 0;
+  }
+
+  document.getElementById('retreat-start').addEventListener('change', updateCountdown);
+  document.getElementById('retreat-end').addEventListener('change', function() {
+    const s = document.getElementById('retreat-start').value;
+    const e = this.value;
+    if (s && e) {
+      const opts = { day: 'numeric', month: 'short', year: 'numeric' };
+      const sDate = new Date(s).toLocaleDateString('en-GB', opts);
+      const eDate = new Date(e).toLocaleDateString('en-GB', opts);
+      document.getElementById('hero-meta').textContent = sDate + ' – ' + eDate;
+    }
+  });
+
+  updateCountdown();
+</script>
+</body>
+</html>
