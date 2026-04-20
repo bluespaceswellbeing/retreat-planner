@@ -3,25 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Retreat Planner — Your Planning Hub</title>
+<title>Blue Spaces — Your Planning Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sand: #F5F0E8;
-    --sand-mid: #EDE6D6;
-    --sand-dark: #D4C9B0;
-    --clay: #B5956A;
-    --clay-dark: #8B6F47;
-    --clay-light: #D4B896;
-    --sage: #7A8C7E;
-    --sage-light: #C5D0C7;
-    --sage-dark: #4A5C4E;
-    --moss: #3D4F3E;
-    --terracotta: #C4664A;
-    --terracotta-light: #E8A899;
-    --cream: #FDFAF4;
+    --sand: #F9F8F4;
+    --sand-mid: #EBE9E4;
+    --sand-dark: #C8C4BC;
+    --clay: #2B5BB5;
+    --clay-dark: #0F2D6B;
+    --clay-light: #7B9FD4;
+    --sage: #3A6BC4;
+    --sage-light: #B8CCE8;
+    --sage-dark: #0F2D6B;
+    --moss: #153C86;
+    --terracotta: #1A4FA0;
+    --terracotta-light: #A8C0E8;
+    --cream: #F9F8F4;
     --ink: #2A2420;
     --ink-mid: #5C4F45;
     --ink-light: #9B8F86;
@@ -44,7 +44,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Manrope', sans-serif;
     background: var(--sand);
     color: var(--ink);
     min-height: 100vh;
@@ -76,10 +76,10 @@
   }
 
   .sidebar-logo-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 22px;
-    font-weight: 300;
-    font-style: italic;
+    font-weight: 400;
+    font-style: normal;
     color: var(--sand);
     line-height: 1.2;
   }
@@ -103,9 +103,9 @@
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: var(--radius-sm);
     color: var(--cream);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 15px;
-    font-style: italic;
+    font-style: normal;
     padding: 6px 10px;
     width: 100%;
     outline: none;
@@ -133,7 +133,7 @@
     padding: 4px 8px;
     width: 100%;
     outline: none;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Manrope', sans-serif;
   }
 
   .sidebar-nav { flex: 1; padding: 0 0.75rem; }
@@ -239,10 +239,10 @@
   }
 
   .page-title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 36px;
-    font-weight: 300;
-    font-style: italic;
+    font-weight: 400;
+    font-style: normal;
     line-height: 1.1;
   }
 
@@ -259,7 +259,7 @@
     padding: 8px 16px;
     border-radius: var(--radius-sm);
     font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-weight: 500;
     cursor: pointer;
     border: none;
@@ -336,7 +336,7 @@
   }
 
   .stat-value {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 32px;
     font-weight: 400;
     line-height: 1;
@@ -549,9 +549,9 @@
   }
 
   .day-label {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 16px;
-    font-style: italic;
+    font-style: normal;
     font-weight: 400;
     color: var(--ink);
   }
@@ -642,10 +642,10 @@
   }
 
   .hero-retreat-name {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 30px;
-    font-weight: 300;
-    font-style: italic;
+    font-weight: 400;
+    font-style: normal;
     margin-bottom: 4px;
     color: var(--sand);
   }
@@ -658,9 +658,9 @@
   }
 
   .countdown-num {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 52px;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1;
     color: var(--clay-light);
   }
@@ -680,7 +680,7 @@
     border-radius: var(--radius-sm);
     padding: 6px 10px;
     font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Manrope', sans-serif;
     color: var(--ink);
     outline: none;
     width: 200px;
@@ -714,8 +714,8 @@
   <!-- ── Sidebar ── -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-title">Retreat Planner</div>
-      <div class="sidebar-logo-sub">Planning hub</div>
+      <div class="sidebar-logo-title">Blue Spaces</div>
+      <div class="sidebar-logo-sub">Retreat Planning Hub</div>
     </div>
 
     <div class="sidebar-retreat-name">
